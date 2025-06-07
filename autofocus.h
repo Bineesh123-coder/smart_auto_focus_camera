@@ -2,24 +2,28 @@
 #define AUTO_FOCUS_H
 
 #include <opencv2/opencv.hpp>
+#include <opencv2/imgproc.hpp>
+#include <opencv2/objdetect.hpp>
 #include <chrono>
 
 class AutoFocusCamera {
 private:
     cv::VideoCapture cap;  // Camera capture object
+    cv::CascadeClassifier face_cascade;  // Face detector
     int camera_id;
     double zoom_level;
     int pan_offset;
     int tilt_offset;
+    
 
  
     
 
 public:
-    
+    bool face_detection;
     std::chrono::steady_clock::time_point lastFocusTime; 
     // Constructor: open camera
-    AutoFocusCamera(int cam_id = 0) : camera_id(cam_id), zoom_level(1.0), pan_offset(0), tilt_offset(0) {
+    AutoFocusCamera(int cam_id = 0) : camera_id(cam_id), zoom_level(1.0), pan_offset(0), tilt_offset(0), face_detection(0){
         cap.open(camera_id);
         if (!cap.isOpened()) {
             throw std::runtime_error("Error opening camera");
@@ -88,6 +92,23 @@ public:
         cv::resize(cropped, zoomed, frame.size());
 
         return zoomed;
+    }
+
+    void loadFaceCascade(const std::string& path) {
+        if (!face_cascade.load(path)) {
+            throw std::runtime_error("Failed to load face cascade");
+        }
+    }
+
+    std::vector<cv::Rect> detectFaces(const cv::Mat& frame_gray) {
+        std::vector<cv::Rect> faces;
+        face_cascade.detectMultiScale(frame_gray, faces, 1.1, 4, 0, cv::Size(30, 30));
+        return faces;
+    }
+    void enableFaceDetection()
+    {
+        face_detection =! face_detection;
+        std::cout<<(face_detection?"face_detection enbaled\n" :"face_detection disabled\n");
     }
 
 };
