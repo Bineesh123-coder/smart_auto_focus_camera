@@ -20,10 +20,11 @@ private:
     
 
 public:
-    bool face_detection;
+    bool face_detection = false;
+    bool object_detection = false;
     std::chrono::steady_clock::time_point lastFocusTime; 
     // Constructor: open camera
-    AutoFocusCamera(int cam_id = 0) : camera_id(cam_id), zoom_level(1.0), pan_offset(0), tilt_offset(0), face_detection(0){
+    AutoFocusCamera(int cam_id = 0) : camera_id(cam_id), zoom_level(1.0), pan_offset(0), tilt_offset(0){
         cap.open(camera_id);
         if (!cap.isOpened()) {
             throw std::runtime_error("Error opening camera");
@@ -111,6 +112,14 @@ public:
         std::cout<<(face_detection?"face_detection enbaled\n" :"face_detection disabled\n");
     }
 
+    void enableObjectDetection()
+    {
+        object_detection =! object_detection;
+        std::cout<<(object_detection?"object_detection enbaled\n" :"object_detection disabled\n");
+    }
+
+
+    
 };
 
 #endif //AUTO_FOCUS_H
