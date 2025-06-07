@@ -22,7 +22,8 @@ int main() {
             cv::imshow("Smart Camera", view);
 
             char key = (char)cv::waitKey(30);
-            if (key == 27 ) break;        // ESC to quit
+            key = std::tolower(key);
+            if (key == 27  || key == 'q') break;        // ESC to quit
             else if (key == 'i') camera.setZoom(camera.getZoom() + 0.1); // Zoom in
             else if (key == 'o') camera.setZoom(camera.getZoom() - 0.1); // Zoom out
             else if (key == 'a') camera.panLeft();   // Pan left
@@ -34,6 +35,10 @@ int main() {
       
     } catch (const std::exception& ex) {
         std::cerr << "Exception: " << ex.what() << std::endl;
+    }
+    catch (...)
+    {
+        std::cerr <<"Error in starting autofocus camerea"<<std::endl;
     }
 
     return 0;

@@ -67,31 +67,29 @@ public:
 
 
     cv::Mat applyZoomPanTilt(const cv::Mat& frame) {
-    if (zoom_level <= 1.0) return frame;  // No zoom
+        if (zoom_level <= 1.0) return frame;  // No zoom
 
-    int w = frame.cols / zoom_level;
-    int h = frame.rows / zoom_level;
+        int w = frame.cols / zoom_level;
+        int h = frame.rows / zoom_level;
 
-    int center_x = frame.cols / 2 + pan_offset;
-    int center_y = frame.rows / 2 + tilt_offset;
+        int center_x = frame.cols / 2 + pan_offset;
+        int center_y = frame.rows / 2 + tilt_offset;
 
-    int x = center_x - w / 2;
-    int y = center_y - h / 2;
+        int x = center_x - w / 2;
+        int y = center_y - h / 2;
 
-    // Keep within bounds
-    x = std::max(0, std::min(x, frame.cols - w));
-    y = std::max(0, std::min(y, frame.rows - h));
+        // Keep within bounds
+        x = std::max(0, std::min(x, frame.cols - w));
+        y = std::max(0, std::min(y, frame.rows - h));
 
-    cv::Rect roi(x, y, w, h);
-    cv::Mat cropped = frame(roi);
-    cv::Mat zoomed;
-    cv::resize(cropped, zoomed, frame.size());
+        cv::Rect roi(x, y, w, h);
+        cv::Mat cropped = frame(roi);
+        cv::Mat zoomed;
+        cv::resize(cropped, zoomed, frame.size());
 
-    return zoomed;
-}
+        return zoomed;
+    }
 
-
-    // TODO: Add autofocus algorithm here
 };
 
 #endif //AUTO_FOCUS_H
